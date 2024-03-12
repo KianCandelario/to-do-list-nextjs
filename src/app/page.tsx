@@ -35,7 +35,7 @@ const Home = async () => {
               <TodoItems key={todo.id} {...todo}></TodoItems>
             ))
           ) : (
-            <li>No todos available.</li>
+            <li className="bg-[#B9B4C7] text-[#352F44] flex justify-center items-center p-5">No todos available.</li>
           )}
         </ul>
       </div>
