@@ -1,7 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
+import { prisma } from "@/db";
+import TodoItems from "@/components/TodoItems";
 
-const Home = () => {
+const getTodos = () => {
+  return prisma.todo.findMany()
+}
+
+const Home = async () => {
+  const todos = await getTodos()
+  
   return (
     <main className="h-dvh w-dvw flex justify-center items-center">
       <div className="w-[30%]">
@@ -21,7 +29,15 @@ const Home = () => {
             New
           </Link>
         </header>
-        <div></div>
+        <ul>
+          {todos.length > 0 ? (
+            todos.map((todo) => (
+              <TodoItems key={todo.id} {...todo}></TodoItems>
+            ))
+          ) : (
+            <li>No todos available.</li>
+          )}
+        </ul>
       </div>
     </main>
   );
