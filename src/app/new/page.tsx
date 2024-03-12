@@ -1,5 +1,26 @@
 import Link from "next/link";
-import Image from "next/image";
+import { prisma } from "@/db";
+import { redirect } from "next/navigation";
+
+const createTask = async (data: FormData) => {
+    "use server"
+
+    const title = data.get("title")?.valueOf()  // used "?." to make sure it doesn't return undefined
+
+    if (typeof title !== "string" || title.length === 0) {
+        throw new Error ("Invalid Input")
+    }
+
+    await prisma.todo.create({
+        data: {
+            title, 
+            complete: false
+        }
+    })
+
+    // redirect back to the homepage
+    redirect("/")
+}
 
 const NewPage = () => {
   return (
@@ -16,7 +37,7 @@ const NewPage = () => {
             </Link>
           </header>
 
-          <form action="" className="flex justify-center items-center">
+          <form action={createTask} className="flex justify-center items-center">
             <input
               type="text"
               name="title"
