@@ -4,12 +4,21 @@ import { prisma } from "@/db";
 import TodoItems from "@/components/TodoItems";
 
 const getTodos = () => {
-  return prisma.todo.findMany()
-}
+  return prisma.todo.findMany();
+};
+
+const toggleToDo = async (id: string, complete: boolean) => {
+  "use server";
+
+  await prisma.todo.update({
+    where: { id },
+    data: { complete },
+  });
+};
 
 const Home = async () => {
-  const todos = await getTodos()
-  
+  const todos = await getTodos();
+
   return (
     <main className="h-dvh w-dvw flex justify-center items-center">
       <div className="w-[30%]">
@@ -32,10 +41,16 @@ const Home = async () => {
         <ul>
           {todos.length > 0 ? (
             todos.map((todo) => (
-              <TodoItems key={todo.id} {...todo}></TodoItems>
+              <TodoItems
+                key={todo.id}
+                {...todo}
+                toggleToDo={toggleToDo}
+              ></TodoItems>
             ))
           ) : (
-            <li className="bg-[#B9B4C7] text-[#352F44] flex justify-center items-center p-5">No todos available.</li>
+            <li className="bg-[#B9B4C7] text-[#352F44] flex justify-center items-center p-5">
+              No todos available.
+            </li>
           )}
         </ul>
       </div>
